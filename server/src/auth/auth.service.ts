@@ -2,12 +2,15 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/interfaces/user.interface';
+import { encryptPassword, decryptPassword } from 'src/utils/encryption';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
   async signIn( email: string, password: string): Promise<{ access_token: string }> {
@@ -15,9 +18,12 @@ export class AuthService {
     if (!user) {
       throw new NotFoundException();
     }
-    else if (user?.password !== password) {
+    // decrypt password retrieved from the database
+    const decryptedPassword = await decryptPassword(user.password,this.configService.get<string>('ENCRYPTION_KEY'));
+    if (password !== decryptedPassword) {
       throw new UnauthorizedException();
     }
+
     const payload = { userId: user.id, email: user.email };
     return {
       access_token: await this.jwtService.signAsync(payload),
@@ -25,10 +31,9 @@ export class AuthService {
   }
 
   async signUp(user: User): Promise<User> {
+    // encrypt password before saving it to the database
+    const encryptedPassword = await encryptPassword(user.password, this.configService.get<string>('ENCRYPTION_KEY'));
+    user.password = encryptedPassword;
     return await this.usersService.create(user);
   }
 }
-
-
-
-// AuthService has the job of retrieving a user and verifying the password.
