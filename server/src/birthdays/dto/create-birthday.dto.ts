@@ -1,4 +1,5 @@
-import { IsDate, IsDateString, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsDateString, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Category } from '../enums/category';
 
 export class CreateBirthdayDto {
     @IsString()
@@ -9,7 +10,7 @@ export class CreateBirthdayDto {
     date: Date;
 
 
-    @IsString()
+    @IsEnum(Category)
     @IsOptional()
     category: string;
 }

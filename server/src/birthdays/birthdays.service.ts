@@ -1,41 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { Birthday } from './interfaces/birthday.interface';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { Birthday } from './schemas/birthdays.schema';
 
 @Injectable()
 export class BirthdaysService {
-    private readonly birthdays: Birthday[] = [];
+    constructor(@InjectModel('Birthday') private readonly birthdayModel: Model<Birthday>) {}
 
-    create(birthday: Birthday): Birthday {
-        this.birthdays.push(birthday);
-        return birthday;
+    async findAll(): Promise<Birthday[]> {
+        return await this.birthdayModel.find();
     }
 
-    findAll(): Birthday[] {
-        return this.birthdays;
+    async findOne(id: string): Promise<Birthday> {
+        return await this.birthdayModel.findOne({ _id: id });
     }
 
-    findOne(id: string): Birthday {
-        return this.birthdays.find(birthday => birthday.id === id);
+    async create(birthday: Birthday): Promise<Birthday> {
+        const newBirthday = new this.birthdayModel(birthday);
+        return await newBirthday.save();
     }
 
-    update(id: string, birthday: Birthday) : Birthday {
-        const index = this.birthdays.findIndex(birthday => birthday.id === id);
-        this.birthdays[index] = birthday;
-        return birthday;
+    async delete(id: string): Promise<Birthday> {
+        return await this.birthdayModel.findByIdAndDelete(id);
     }
 
-    delete(id: string) {
-        const index = this.birthdays.findIndex(birthday => birthday.id === id);
-        this.birthdays.splice(index, 1);
+    async update(id: string, birthday: Birthday): Promise<Birthday> {
+        return await this.birthdayModel.findByIdAndUpdate(id, birthday, { new: true });
     }
-
-    findUpcoming() {
-        return this.birthdays.filter(birthday => {
-            const today = new Date();
-            const date = new Date(birthday.date);
-            return date.getMonth() === today.getMonth() && date.getDate() > today.getDate();
-        });
-    }
-
 
 }

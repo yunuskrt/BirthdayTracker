@@ -1,48 +1,64 @@
-import { Controller, Delete, Get, Param, Patch, Post,ParseIntPipe, Body } from '@nestjs/common';
+import { 
+    Controller, 
+    Delete, 
+    Get, 
+    Param, 
+    Put, 
+    Post, 
+    Body, 
+    NotFoundException,
+    HttpCode,
+} from '@nestjs/common';
 import { BirthdaysService } from './birthdays.service';
 import { Birthday } from './interfaces/birthday.interface';
 import { CreateBirthdayDto } from './dto/create-birthday.dto';
+import { UpdateBirthdayDto } from './dto/update-birthday.dto';
 
 
 @Controller('api/v1/birthdays')
 export class BirthdaysController {
     constructor(private birthdaysService: BirthdaysService) {}
-    private id: number = 1
+    
     @Get()
-    findAll() : Birthday[]{
-        return this.birthdaysService.findAll();
+    async findAll(): Promise<Birthday[]> {
+        return await this.birthdaysService.findAll();
+
     }
 
-    @Post()
-    create(@Body() createBirthDayDto: CreateBirthdayDto ) : Birthday {
-        const id = `id-${this.id}`;
-        this.id++;
-        return this.birthdaysService.create({id, ...createBirthDayDto});
-    }
-
-    @Get('upcoming')
-    findUpcoming() : Birthday[] {
-        return this.birthdaysService.findUpcoming();
-    }
 
     @Get(':id')
-    findOne(
-    // @Param('id', ParseIntPipe) id: string,
-    @Param('id') id: string,
-    ) : Birthday {
-       return this.birthdaysService.findOne(id);
+    async findOne(@Param('id') id: string): Promise<Birthday> {
+        const birthday = await this.birthdaysService.findOne(id);
+        console.log({birthday, type: typeof birthday});
+        if (!birthday) {
+            throw new NotFoundException(`Birthday with id ${id} not found`);
+        }
+        return birthday
     }
 
-    @Patch(':id')
-    update(@Param('id') id :string, @Body() updateBirthdayDto: CreateBirthdayDto) : Birthday{
-        return this.birthdaysService.update(id, updateBirthdayDto);
+    
+
+    @Post()
+    async create(@Body() createBirthDayDto: CreateBirthdayDto ) : Promise<Birthday> {
+        return await this.birthdaysService.create(createBirthDayDto);
     }
 
     @Delete(':id')
-    delete(@Param('id') id :string) : void {
-        return this.birthdaysService.delete(id);
+    @HttpCode(204)
+    async delete(@Param('id') id: string): Promise<void> {
+        const birthday =  await this.birthdaysService.delete(id);
+        if (!birthday) {
+            throw new NotFoundException(`Birthday with id ${id} not found`);
+        }
     }
 
-
+    @Put(':id')
+    async update(@Body() updateBirthdayDto: UpdateBirthdayDto, @Param('id') id: string) : Promise<Birthday> {
+        const birthday =  await this.birthdaysService.update(id, updateBirthdayDto);
+         if (!birthday) {
+            throw new NotFoundException(`Birthday with id ${id} not found`);
+        }
+        return birthday
+    }
 
 }
