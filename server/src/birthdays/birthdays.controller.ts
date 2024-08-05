@@ -10,11 +10,12 @@ import {
     HttpCode,
     Query,
     ParseIntPipe,
+    Request
 } from '@nestjs/common';
 import { BirthdaysService } from './birthdays.service';
 import { CreateBirthdayDto } from './dto/create-birthday.dto';
 import { UpdateBirthdayDto } from './dto/update-birthday.dto';
-import { ClientBirthday } from './interfaces/client-birthday.interface';
+import { ResponseBirthday } from './interfaces/response-birthday.interface';
 import { convertBirthdayToGetBirthday } from 'src/utils/conversions';
 
 
@@ -23,8 +24,9 @@ export class BirthdaysController {
     constructor(private birthdaysService: BirthdaysService) {}
 
     @Get()
-    async findAll(): Promise<ClientBirthday[]> {
+    async findAll(@Request() req): Promise<ResponseBirthday[]> {
         const allBirthdays =  await this.birthdaysService.findAll();
+        console.log(req.user);
         // add daysUntil to each birthday and sort ascending
         return allBirthdays.map((birthday) => {
             return convertBirthdayToGetBirthday(birthday);
@@ -37,7 +39,7 @@ export class BirthdaysController {
     }
 
     @Get(':id')
-    async findOne(@Param('id') id: string): Promise<ClientBirthday> {
+    async findOne(@Param('id') id: string): Promise<ResponseBirthday> {
         const birthday = await this.birthdaysService.findOne(id);
         if (!birthday) {
             throw new NotFoundException(`Birthday with id ${id} not found`);
@@ -46,7 +48,7 @@ export class BirthdaysController {
     }
 
     @Post()
-    async create(@Body() createBirthDayDto: CreateBirthdayDto ) : Promise<ClientBirthday> {
+    async create(@Body() createBirthDayDto: CreateBirthdayDto ) : Promise<ResponseBirthday> {
         const createdBirthday =  await this.birthdaysService.create(createBirthDayDto);
         return convertBirthdayToGetBirthday(createdBirthday)
     }
@@ -61,7 +63,7 @@ export class BirthdaysController {
     }
 
     @Put(':id')
-    async update(@Body() updateBirthdayDto: UpdateBirthdayDto, @Param('id') id: string) : Promise<ClientBirthday> {
+    async update(@Body() updateBirthdayDto: UpdateBirthdayDto, @Param('id') id: string) : Promise<ResponseBirthday> {
         const updatedBirthday =  await this.birthdaysService.update(id, updateBirthdayDto);
          if (!updatedBirthday) {
             throw new NotFoundException(`Birthday with id ${id} not found`);

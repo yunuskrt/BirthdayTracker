@@ -1,7 +1,7 @@
 import { Birthday } from 'src/birthdays/interfaces/birthday.interface';
-import { ClientBirthday } from 'src/birthdays/interfaces/client-birthday.interface';
+import { ResponseBirthday } from 'src/birthdays/interfaces/response-birthday.interface';
 
-export function convertBirthdayToGetBirthday(birthday: Birthday): ClientBirthday {
+export function convertBirthdayToGetBirthday(birthday: Birthday): ResponseBirthday {
   const date = birthday.date;
   const birthDay = date.getUTCDate();
   const birthMonth = date.getUTCMonth() + 1;

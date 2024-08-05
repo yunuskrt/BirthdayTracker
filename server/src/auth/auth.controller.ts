@@ -7,8 +7,9 @@ import {
   Post,
   Request,
 } from '@nestjs/common';
-import { AuthGuard, SkipAuth } from './auth.guard';
+import { SkipAuth } from './auth.guard';
 import { AuthService } from './auth.service';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -17,8 +18,17 @@ export class AuthController {
   @SkipAuth()
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
+  signIn(@Body() signInDto: CreateUserDto) {
+    return this.authService.signIn(signInDto.email, signInDto.password);
+  }
+
+  @SkipAuth()
+  @HttpCode(HttpStatus.CREATED)
+  @Post('register')
+  signUp(@Body() createUserDto: CreateUserDto) {
+
+    return this.authService.signUp(createUserDto);
+   
   }
 
   @Get('profile')

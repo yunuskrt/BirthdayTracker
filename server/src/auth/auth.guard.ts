@@ -6,16 +6,19 @@ import {
   SetMetadata
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
 import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
+import { ConfigService } from '@nestjs/config';
 
 export const SKIP_AUTH = 'skipAuth';
 export const SkipAuth = () => SetMetadata(SKIP_AUTH, true);
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService, private reflector: Reflector) {}
+  constructor(
+    private jwtService: JwtService, 
+    private reflector: Reflector, 
+    private configService: ConfigService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
 
@@ -30,7 +33,6 @@ export class AuthGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
-    console.log({token})
     if (!token) {
       throw new UnauthorizedException();
     }
@@ -38,12 +40,11 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(
         token,
         {
-          secret: jwtConstants.secret
+          secret: this.configService.get<string>('JWT_SECRET')
         }
       );
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
-      console.log({payload})
       request['user'] = payload;
     } catch {
       throw new UnauthorizedException();
@@ -56,10 +57,6 @@ export class AuthGuard implements CanActivate {
     if (!token) {
       return undefined;
     }
-    console.log({token})
     return token;
-    // const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    // console.log({authorization:request.headers.authorization, type, token})
-    // return type === 'Bearer' ? token : undefined;
   }
 }

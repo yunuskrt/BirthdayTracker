@@ -1,7 +1,7 @@
-export interface ClientBirthday {
+export interface ResponseBirthday {
   id: string;
   name: string;
-  date: Date,
+  date: Date;
   category: string | null;
   daysUntil: number;
 }
