@@ -1,8 +1,21 @@
 import React from 'react'
-import Header from '@/components/header'
+import { useRouter } from 'next/router'
+import AuthForm from '@/components/authForm'
 
-const index = () => {
-	return <div>Home Page</div>
+const Home = () => {
+	const router = useRouter()
+	const signInFormText = "Don't have an account?"
+	return (
+		<AuthForm
+			title='Sign In'
+			onRedirect={() => router.push('/signup')}
+			text={signInFormText}
+			linkText=' Sign Up'
+			onSubmit={(email, password) => {
+				console.log({ email, password })
+			}}
+		/>
+	)
 }
 
-export default index
+export default Home
