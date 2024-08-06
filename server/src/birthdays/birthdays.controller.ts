@@ -26,12 +26,25 @@ export class BirthdaysController {
     constructor(private birthdaysService: BirthdaysService) {}
 
     @Get()
-    async findAll(@Request() req): Promise<ResponseBirthday[]> {
+    async findAll(@Request() req, @Query() query): Promise<ResponseBirthday[]> {
+        const keys = Object.keys(query);  
+        if (keys.length > 1 || (keys.length === 1 && keys[0] !== 'name')) {
+            throw new BadRequestException('Only name parameter in query is allowed');
+        }else if (keys.length === 1){
+            // search by name functionality
+            const searchedBirthdays = await this.birthdaysService.findByName(query.name, req.user.id);
+            return searchedBirthdays.map((birthday) => {
+                return convertBirthdayToGetBirthday(birthday);
+            }).sort((a, b) => a.daysUntil - b.daysUntil);
+        }
         const allBirthdays =  await this.birthdaysService.findAll(req.user.id);
         // add daysUntil to each birthday and sort ascending
         return allBirthdays.map((birthday) => {
             return convertBirthdayToGetBirthday(birthday);
         }).sort((a, b) => a.daysUntil - b.daysUntil);
+    
+        
+       
     }
 
     @Get('upcoming')

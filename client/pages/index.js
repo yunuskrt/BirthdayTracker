@@ -106,6 +106,29 @@ const Home = () => {
 		}
 	}
 
+	const searchBirthdaysByName = async (searchedName) => {
+		try {
+			const response = await axios.get(
+				`http://localhost:8080/api/v1/birthdays?name=${searchedName}`,
+				{
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: auth.accessToken,
+					},
+				}
+			)
+			if (response.status === 200) {
+				const data = response.data
+				setAuth((prevData) => ({ ...prevData, data }))
+			} else {
+				alertNotification('danger', 'Something went wrong')
+			}
+		} catch (error) {
+			console.log(error.message)
+			alertNotification('danger', 'Something went wrong')
+		}
+	}
+
 	const deleteBirthday = async (id) => {
 		// send delete request
 		setLoading(true)
@@ -222,7 +245,7 @@ const Home = () => {
 						data: fetchedData.data,
 						upcoming: fetchedData.upcoming,
 					}))
-					alertNotification('danger', 'Birthday created successfully')
+					alertNotification('success', 'Birthday created successfully')
 				} else {
 					alertNotification('danger', 'Something went wrong')
 					setAuth({ accessToken: null, data: [], upcoming: [] })
@@ -240,17 +263,31 @@ const Home = () => {
 		}
 	}
 
-	const selectRange = (range) => {
+	const selectRange = async (range) => {
 		const rangeInt = parseInt(range)
-
 		setUpcomingRange(rangeInt)
-		const upcomingData = auth.data.filter((item) => {
-			return item.daysUntil <= rangeInt
-		})
-		setAuth((prevData) => ({
-			...prevData,
-			upcoming: upcomingData,
-		}))
+
+		// send upcoming range request
+		try {
+			const response = await axios.get(
+				`http://localhost:8080/api/v1/birthdays/upcoming?period=${range}`,
+				{
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: auth.accessToken,
+					},
+				}
+			)
+			if (response.status === 200) {
+				const upcoming = response.data
+				setAuth((prevData) => ({ ...prevData, upcoming }))
+			} else {
+				alertNotification('danger', 'Something went wrong')
+			}
+		} catch (error) {
+			console.log(error.message)
+			alertNotification('danger', 'Something went wrong')
+		}
 	}
 
 	return loading ? (
@@ -273,6 +310,7 @@ const Home = () => {
 						onDelete={deleteBirthday}
 						onEdit={updateBirthday}
 						onCreate={createBirthday}
+						onSearch={searchBirthdaysByName}
 					/>
 				</div>
 			) : (

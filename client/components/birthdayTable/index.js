@@ -5,7 +5,7 @@ import { MdFamilyRestroom } from 'react-icons/md'
 import { GiThreeFriends } from 'react-icons/gi'
 import styles from './birthdayTable.module.css'
 
-const BirthdayTable = ({ data, onDelete, onEdit, onCreate }) => {
+const BirthdayTable = ({ data, onDelete, onEdit, onCreate, onSearch }) => {
 	const [showCreateModal, setShowCreateModal] = useState(false)
 	const handleCreateClose = () => setShowCreateModal(false)
 	const handleCreateShow = () => setShowCreateModal(true)
@@ -13,6 +13,8 @@ const BirthdayTable = ({ data, onDelete, onEdit, onCreate }) => {
 	const nameCreateRef = useRef(null)
 	const categoryCreateRef = useRef(null)
 	const dateCreateRef = useRef(null)
+
+	const searchBarRef = useRef(null)
 
 	const [editModal, setEditModal] = useState({
 		show: false,
@@ -182,6 +184,13 @@ const BirthdayTable = ({ data, onDelete, onEdit, onCreate }) => {
 					</Button>
 				</Card.Header>
 				<Card.Body>
+					<Form.Control
+						type='text'
+						placeholder="Search user's birthday"
+						className={styles.searchBar}
+						ref={searchBarRef}
+						onChange={() => onSearch(searchBarRef.current.value)}
+					/>
 					<Table hover responsive>
 						<thead>
 							<tr>

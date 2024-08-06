@@ -11,6 +11,10 @@ export class BirthdaysService {
         return await this.birthdayModel.find({ owner: ownerId });
     }
 
+    async findByName(name: string, ownerId: string): Promise<Birthday[]> {
+        return await this.birthdayModel.find({ name: { $regex: name, $options: 'i' }, owner: ownerId });
+    }
+
     async findOne(id: string, ownerId: string): Promise<Birthday> {
         return await this.birthdayModel.findOne({ _id: id, owner: ownerId });
     }
