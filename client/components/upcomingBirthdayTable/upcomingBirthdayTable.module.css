@@ -1,0 +1,25 @@
+.cardBody{
+    max-height: 300px;
+    overflow: scroll;
+}
+.tableHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.selectRange{
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    color: #6e6e6e;
+}
+
+.selectForm{
+    width: 150px;
+}
+
+.categoryBadge{
+    display: flex;
+    gap: 3px;
+}

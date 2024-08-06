@@ -1,0 +1,26 @@
+.centerAlign{
+    text-align: center;
+}
+
+.tableHeader{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+} 
+
+.daysLeft{
+    text-align: right;
+    color: #a0a0a0 !important;
+}
+
+.category{
+    display: flex;
+    gap: 10px;
+}
+
+.actions{
+    display: flex;
+    gap: 5px;
+    justify-content: flex-end;
+    margin-right: 30px;
+}
