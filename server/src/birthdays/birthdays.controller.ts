@@ -11,7 +11,8 @@ import {
     Query,
     ParseIntPipe,
     Request,
-    HttpStatus
+    HttpStatus,
+    BadRequestException
 } from '@nestjs/common';
 import { BirthdaysService } from './birthdays.service';
 import { CreateBirthdayDto } from './dto/create-birthday.dto';
@@ -34,8 +35,16 @@ export class BirthdaysController {
     }
 
     @Get('upcoming')
-    findUpcoming(@Query('period', ParseIntPipe) period: number): string{
-        return `Upcoming birthdays for ${period} period`;
+    async findUpcoming(@Request() req, @Query('period', ParseIntPipe) period: number): Promise<ResponseBirthday[]> {
+        if (period <= 0 || period > 90) {
+            throw new BadRequestException('Period must be in range [1, 90]');
+        }
+        const ownerBirthdays = await this.birthdaysService.findAll(req.user.id);
+        return ownerBirthdays.map((birthday) => {
+            return convertBirthdayToGetBirthday(birthday);
+        }).filter((birthday) => {
+            return birthday.daysUntil <= period;
+        }).sort((a, b) => a.daysUntil - b.daysUntil)
     }
 
     @Get(':id')
