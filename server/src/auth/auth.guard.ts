@@ -10,6 +10,7 @@ import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 
+// custom decorator to skip authentication for certain routes
 export const SKIP_AUTH = 'skipAuth';
 export const SkipAuth = () => SetMetadata(SKIP_AUTH, true);
 

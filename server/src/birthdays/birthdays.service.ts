@@ -7,12 +7,12 @@ import { Birthday } from './schemas/birthdays.schema';
 export class BirthdaysService {
     constructor(@InjectModel('Birthday') private readonly birthdayModel: Model<Birthday>) {}
 
-    async findAll(): Promise<Birthday[]> {
-        return await this.birthdayModel.find();
+    async findAll(ownerId: string): Promise<Birthday[]> {
+        return await this.birthdayModel.find({ owner: ownerId });
     }
 
-    async findOne(id: string): Promise<Birthday> {
-        return await this.birthdayModel.findOne({ _id: id });
+    async findOne(id: string, ownerId: string): Promise<Birthday> {
+        return await this.birthdayModel.findOne({ _id: id, owner: ownerId });
     }
 
     async create(birthday: Birthday): Promise<Birthday> {
@@ -20,8 +20,8 @@ export class BirthdaysService {
         return await newBirthday.save();
     }
 
-    async delete(id: string): Promise<Birthday> {
-        return await this.birthdayModel.findByIdAndDelete(id);
+    async delete(id: string, ownerId: string): Promise<Birthday> {
+        return await this.birthdayModel.findOneAndDelete({ _id: id, owner: ownerId });
     }
 
     async update(id: string, birthday: Birthday): Promise<Birthday> {
