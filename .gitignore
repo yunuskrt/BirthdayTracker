@@ -65,3 +65,42 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # config
 server/config
+
+# Client .gitignore
+
+# dependencies
+client/node_modules
+client/.pnp
+client/.pnp.js
+client/.yarn/install-state.gz
+
+# testing
+client/coverage
+
+# next.js
+client/.next/
+client/out/
+
+# production
+client/build
+
+# debug
+client/npm-debug.log*
+client/yarn-debug.log*
+client/yarn-error.log*
+
+# local env files
+client/.env
+client/.env*.local
+
+# vercel
+client/.vercel
+
+# typescript
+*.tsbuildinfo
+client/next-env.d.ts
+
+# package-lock
+/client/package-lock.json
+
+client/.gitignore

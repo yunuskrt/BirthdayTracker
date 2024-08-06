@@ -1,11 +1,9 @@
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   HttpStatus,
   Post,
-  Request,
 } from '@nestjs/common';
 import { SkipAuth } from './auth.guard';
 import { AuthService } from './auth.service';
@@ -29,8 +27,4 @@ export class AuthController {
     return this.authService.signUp(createUserDto);
   }
 
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
-  }
 }
