@@ -50,7 +50,7 @@ const Home = () => {
 			// send login request
 			try {
 				const response = await axios.post(
-					'http://localhost:8080/api/v1/auth/login',
+					'https://birthdaytracker-production.up.railway.app/api/v1/auth/login',
 					{ email, password },
 					{
 						headers: {
@@ -84,7 +84,7 @@ const Home = () => {
 	const getAllBirthdays = async (accessToken) => {
 		try {
 			const response = await axios.get(
-				'http://localhost:8080/api/v1/birthdays',
+				'https://birthdaytracker-production.up.railway.app/api/v1/birthdays',
 				{
 					headers: {
 						'Content-Type': 'application/json',
@@ -109,7 +109,7 @@ const Home = () => {
 	const searchBirthdaysByName = async (searchedName) => {
 		try {
 			const response = await axios.get(
-				`http://localhost:8080/api/v1/birthdays?name=${searchedName}`,
+				`https://birthdaytracker-production.up.railway.app/api/v1/birthdays?name=${searchedName}`,
 				{
 					headers: {
 						'Content-Type': 'application/json',
@@ -134,7 +134,7 @@ const Home = () => {
 		setLoading(true)
 		try {
 			const response = await axios.delete(
-				`http://localhost:8080/api/v1/birthdays/${id}`,
+				`https://birthdaytracker-production.up.railway.app/api/v1/birthdays/${id}`,
 				{
 					headers: {
 						'Content-Type': 'application/json',
@@ -175,7 +175,7 @@ const Home = () => {
 			try {
 				// send edit request
 				const response = await axios.put(
-					`http://localhost:8080/api/v1/birthdays/${birthdayData.id}`,
+					`https://birthdaytracker-production.up.railway.app/api/v1/birthdays/${birthdayData.id}`,
 					{
 						name: birthdayData.name,
 						category:
@@ -229,7 +229,7 @@ const Home = () => {
 			setLoading(true)
 			try {
 				const response = await axios.post(
-					'http://localhost:8080/api/v1/birthdays',
+					'https://birthdaytracker-production.up.railway.app/api/v1/birthdays',
 					data,
 					{
 						headers: {
@@ -270,7 +270,7 @@ const Home = () => {
 		// send upcoming range request
 		try {
 			const response = await axios.get(
-				`http://localhost:8080/api/v1/birthdays/upcoming?period=${range}`,
+				`https://birthdaytracker-production.up.railway.app/api/v1/birthdays/upcoming?period=${range}`,
 				{
 					headers: {
 						'Content-Type': 'application/json',

@@ -19,7 +19,7 @@ const Signup = () => {
 			try {
 				// send register request
 				const response = await axios.post(
-					'http://localhost:8080/api/v1/auth/register',
+					'https://birthdaytracker-production.up.railway.app/api/v1/auth/register',
 					{ email, password },
 					{
 						headers: {
