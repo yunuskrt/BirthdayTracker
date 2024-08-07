@@ -18,7 +18,7 @@ import { BirthdaysService } from './birthdays.service';
 import { CreateBirthdayDto } from './dto/create-birthday.dto';
 import { UpdateBirthdayDto } from './dto/update-birthday.dto';
 import { ResponseBirthday } from './interfaces/response-birthday.interface';
-import { convertBirthdayToGetBirthday } from 'src/utils/conversions';
+import { convertBirthdayToGetBirthday } from '../utils/conversions';
 
 
 @Controller('api/v1/birthdays')

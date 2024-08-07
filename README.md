@@ -195,6 +195,26 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Unit Tests
+
+- Unit tests of birthday controller are held on the 'birthdays.controller.spec.ts' file.
+
+- BirthdayService is mocked during unit tests. This isolates the controller and allows testing its logic without depending on the actual service implementation.
+
+- The birthdayStub() function provides consistent and predefined data for testing. It returns a fixed Birthday object to be used in various test cases. The date field of birthdayStub is set always to 10 days after the current date in order to avoid conflicting test results for same data later on while getting the upcomming birthday records.
+
+- Verified that the correct service methods are called with expected arguments using expect(serviceMethod).toHaveBeenCalledWith(arguments).
+
+- Verified that the controller methods return the expected data using expect(returnedValue).toEqual(expectedValue).
+
+- Tried to test all possible scenarios for birthday controller.
+
+-- To test the birthday controller, run the following:
+
+```bash
+$ npm test birthdays.controller
+```
+
 ## Deployment
 
 1. Backend is deployed on railway.app.
